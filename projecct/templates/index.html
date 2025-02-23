@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Currency Converter</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Dark Theme with Deep Teal and Soft Gold Accents */
+    body {
+      position: relative;
+      overflow: hidden;
+      background: #121212 url('https://example.com/path-to-your-company-symbol.png') no-repeat center center fixed;
+      background-size: 150px;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: -1;
+    }
+    
+    /* Attractive Falling Currency Symbols in Soft Gold */
+    .falling-currency {
+      position: absolute;
+      top: -50px;
+      color: rgba(255, 215, 0, 0.6); /* soft gold */
+      font-size: 26px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+      user-select: none;
+      animation: fall 8s linear infinite;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .falling-currency:nth-child(1) { left: 10%; animation-duration: 7s; font-size: 30px; }
+    .falling-currency:nth-child(2) { left: 20%; animation-duration: 9s; font-size: 24px; }
+    .falling-currency:nth-child(3) { left: 35%; animation-duration: 8s; font-size: 28px; }
+    .falling-currency:nth-child(4) { left: 50%; animation-duration: 10s; font-size: 32px; }
+    .falling-currency:nth-child(5) { left: 65%; animation-duration: 7s; font-size: 26px; }
+    .falling-currency:nth-child(6) { left: 80%; animation-duration: 9s; font-size: 30px; }
+    .falling-currency:nth-child(7) { left: 90%; animation-duration: 8s; font-size: 34px; }
+
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      background: #1e1e1e;
+      border-radius: 8px;
+      padding: 30px;
+      margin: 0 auto;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      color: #00bfa5; /* Deep teal */
+      margin-bottom: 20px;
+    }
+    .form-control {
+      background: #2c2c2c;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box;
+      color: #e0e0e0;
+    }
+    .form-control:focus {
+      border-color: #00bfa5;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 191, 165, 0.5);
+    }
+    .btn {
+      border-radius: 4px;
+      font-weight: bold;
+      padding: 10px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary {
+      background: #00bfa5; /* Deep teal accent */
+      border: none;
+      color: #121212;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary:hover {
+      background: #00a896;
+      transform: scale(1.02);
+    }
+    .btn-primary::after {
+      content: "💲";
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 2rem;
+      opacity: 0.2;
+      transform: rotate(0deg);
+      animation: buttonFall 3s infinite;
+    }
+    @keyframes buttonFall {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translate(-20px, 20px) rotate(180deg);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+        opacity: 0.3;
+      }
+    }
+    /* Switch Button */
+    .switch-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+      cursor: pointer;
+      color: #00bfa5;
+    }
+    /* Currency Selection Buttons */
+    .btn-outline-primary,
+    .btn-outline-success {
+      color: #e0e0e0;
+      border-color: #666;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-success:hover {
+      background-color: #00bfa5;
+      border-color: #00bfa5;
+    }
+    /* Convert Result Box */
+    .result {
+      background: #00bfa5;
+      color: #121212;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 4px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <!-- Falling Currency Symbols -->
+  <div class="falling-currency">💲</div>
+  <div class="falling-currency">€</div>
+  <div class="falling-currency">₹</div>
+  <div class="falling-currency">£</div>
+  <div class="falling-currency">💲</div>
+  <div class="falling-currency">€</div>
+  <div class="falling-currency">₹</div>
+
+  <div class="container mt-5">
+    <h1 class="mb-4">Currency Converter</h1>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <!-- From Currency -->
+      <div class="form-group">
+        <label for="from_currency">From Currency:</label>
+        {{ form.from_currency(class="form-control", id="from_currency", placeholder="Enter 3-letter code (e.g., USD)") }}
+      </div>
+      <div class="btn-group btn-group-sm mb-3">
+        <button type="button" class="btn btn-outline-primary" onclick="setCurrency('from_currency', 'USD')">
+          <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15"> USD
+        </button>
+        <button type="button" class="btn btn-outline-primary" onclick="setCurrency('from_currency', 'EUR')">
+          <img src="https://flagcdn.com/eu.svg" alt="Europe Flag" width="20" height="15"> EUR
+        </button>
+        <button type="button" class="btn btn-outline-primary" onclick="setCurrency('from_currency', 'INR')">
+          <img src="https://flagcdn.com/in.svg" alt="India Flag" width="20" height="15"> INR
+        </button>
+        <button type="button" class="btn btn-outline-primary" onclick="setCurrency('from_currency', 'GBP')">
+          <img src="https://flagcdn.com/gb.svg" alt="UK Flag" width="20" height="15"> GBP
+        </button>
+      </div>
+      
+      <!-- Switch Button -->
+      <button type="button" class="switch-btn" onclick="switchCurrencies()">
+        &#8646;
+      </button>
+      
+      <!-- To Currency -->
+      <div class="form-group">
+        <label for="to_currency">To Currency:</label>
+        {{ form.to_currency(class="form-control", id="to_currency", placeholder="Enter 3-letter code (e.g., EUR)") }}
+      </div>
+      <div class="btn-group btn-group-sm mb-3">
+        <button type="button" class="btn btn-outline-success" onclick="setCurrency('to_currency', 'USD')">
+          <img src="https://flagcdn.com/us.svg" alt="USA Flag" width="20" height="15"> USD
+        </button>
+        <button type="button" class="btn btn-outline-success" onclick="setCurrency('to_currency', 'EUR')">
+          <img src="https://flagcdn.com/eu.svg" alt="Europe Flag" width="20" height="15"> EUR
+        </button>
+        <button type="button" class="btn btn-outline-success" onclick="setCurrency('to_currency', 'INR')">
+          <img src="https://flagcdn.com/in.svg" alt="India Flag" width="20" height="15"> INR
+        </button>
+        <button type="button" class="btn btn-outline-success" onclick="setCurrency('to_currency', 'GBP')">
+          <img src="https://flagcdn.com/gb.svg" alt="UK Flag" width="20" height="15"> GBP
+        </button>
+      </div>
+      
+      <!-- Amount Field -->
+      <div class="form-group">
+        <label for="amount">Amount:</label>
+        {{ form.amount(class="form-control", id="amount", placeholder="Enter amount") }}
+      </div>
+      
+      <!-- Convert Button -->
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary btn-block") }}
+      </div>
+    </form>
+    
+    {% if result %}
+      <div class="result text-center">
+        Conversion Result: <strong>{{ result }}</strong>
+      </div>
+    {% endif %}
+    
+    <footer class="mt-5 text-center">
+      <p>&copy; 2025 Currency Converter. All rights reserved.</p>
+      <small>Powered by Flask and Bootstrap</small>
+    </footer>
+  </div>
+
+  <script>
+    function setCurrency(inputId, currencyCode) {
+      document.getElementById(inputId).value = currencyCode;
+    }
+    
+    function switchCurrencies() {
+      const fromInput = document.getElementById('from_currency');
+      const toInput = document.getElementById('to_currency');
+      const temp = fromInput.value;
+      fromInput.value = toInput.value;
+      toInput.value = temp;
+    }
+  </script>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

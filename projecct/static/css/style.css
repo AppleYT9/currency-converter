@@ -1,0 +1,88 @@
+/* Global Styles */
+body {
+  background: #f0f2f5;
+  color: #333;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 40px;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px;
+  margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h1 {
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* Form Controls */
+.form-control {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 4px;
+  font-weight: bold;
+  padding: 10px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-primary {
+  background: #007bff;
+  border: none;
+  color: #fff;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: #0069d9;
+  transform: scale(1.02);
+}
+
+.btn-group .btn {
+  margin-right: 5px;
+}
+
+/* Result Box */
+.result {
+  background: #007bff;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 20px;
+}
+.btn img {
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+
+/* Footer */
+footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #777;
+}
